@@ -5,6 +5,15 @@ from PIL import Image
 from model import CNNtoRNN
 from utils import load_checkpoint
 from torchvision.transforms import Compose, Resize, ToTensor, Normalize
+import spacy
+from spacy.cli import download
+
+# Load the English model if it's not already installed
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    download("en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 
 # Load the model
 device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -34,17 +43,12 @@ def generate_caption(image):
     with torch.no_grad():
         output = model(image, None)  # Pass the image through the model
         # Here you need to convert the output to the caption
-        # Example: Get the predicted caption
-        # Note: You may need to adjust this depending on how your model outputs captions
         caption = decode_caption(output)  # Implement this function based on your decoding logic
     return caption
 
 def decode_caption(output):
     # Implement decoding logic to convert model output to caption
-    # Example: This could involve using argmax and converting indices to words using vocab
-    # For simplicity, let's assume output is a tensor of shape [1, vocab_size]
     _, predicted = torch.max(output, dim=2)
-    # Convert indices to words (you need to implement this)
     return "Predicted caption here"  # Replace with your decoding logic
 
 # Streamlit app interface
