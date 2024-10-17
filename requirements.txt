@@ -1,6 +1,5 @@
 streamlit
-python
-torch==2.0.1
+torch==2.0.1  # Ensure this version is compatible with the Python version on Streamlit Cloud
 torchvision==0.15.2
 tqdm==4.66.1
 tensorboard==2.13.0
