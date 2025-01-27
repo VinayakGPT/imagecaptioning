@@ -26,26 +26,26 @@ class EncoderCNN(nn.Module):
 
         return self.dropout(self.relu(features))
 
-class Attention(nn.Module):
-    def __init__(self, feature_dim, hidden_dim, attention_dim):
-        super(Attention, self).__init__()
-        self.feature_layer = nn.Linear(feature_dim, attention_dim)  # For image features
-        self.hidden_layer = nn.Linear(hidden_dim, attention_dim)   # For decoder hidden state
-        self.attention_layer = nn.Linear(attention_dim, 1)         # For combined attention
-        self.relu = nn.ReLU()
-        self.softmax = nn.Softmax(dim=1)
+# class Attention(nn.Module):
+#     def __init__(self, feature_dim, hidden_dim, attention_dim):
+#         super(Attention, self).__init__()
+#         self.feature_layer = nn.Linear(feature_dim, attention_dim)  # For image features
+#         self.hidden_layer = nn.Linear(hidden_dim, attention_dim)   # For decoder hidden state
+#         self.attention_layer = nn.Linear(attention_dim, 1)         # For combined attention
+#         self.relu = nn.ReLU()
+#         self.softmax = nn.Softmax(dim=1)
 
-    def forward(self, features, hidden):
-        # Compute attention scores
-        features_attention = self.feature_layer(features)           # (batch_size, num_pixels, attention_dim)
-        hidden_attention = self.hidden_layer(hidden).unsqueeze(1)   # (batch_size, 1, attention_dim)
-        combined_attention = self.relu(features_attention + hidden_attention)
-        attention_scores = self.attention_layer(combined_attention).squeeze(2)  # (batch_size, num_pixels)
-        attention_weights = self.softmax(attention_scores)          # (batch_size, num_pixels)
+#     def forward(self, features, hidden):
+#         # Compute attention scores
+#         features_attention = self.feature_layer(features)           # (batch_size, num_pixels, attention_dim)
+#         hidden_attention = self.hidden_layer(hidden).unsqueeze(1)   # (batch_size, 1, attention_dim)
+#         combined_attention = self.relu(features_attention + hidden_attention)
+#         attention_scores = self.attention_layer(combined_attention).squeeze(2)  # (batch_size, num_pixels)
+#         attention_weights = self.softmax(attention_scores)          # (batch_size, num_pixels)
 
-        # Weighted sum of features
-        weighted_features = (features * attention_weights.unsqueeze(2)).sum(dim=1)  # (batch_size, feature_dim)
-        return weighted_features, attention_weights
+#         # Weighted sum of features
+#         weighted_features = (features * attention_weights.unsqueeze(2)).sum(dim=1)  # (batch_size, feature_dim)
+#         return weighted_features, attention_weights
 
 class DecoderRNN(nn.Module):
     def __init__(self, embed_size, hidden_size, vocab_size, num_layers):
